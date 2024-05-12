@@ -28,8 +28,8 @@ export const CardWrapper = ({
   socialsLabel
 }: CardWrapperProps) => {
   return (
-    <Card className="w-full max-w-[500px] shadow-md bg-transparent text-white border-none mx-auto">
-      <CardHeader className="">
+    <Card className="w-full max-w-[500px] bg-transparent border-none mx-auto">
+      <CardHeader>
         <Header label={headerLabel} />
       </CardHeader>
       <BackButton href={backButtonHref} label={backButtonLabel} />
