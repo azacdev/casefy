@@ -4,6 +4,7 @@ import { SessionProvider } from "next-auth/react";
 
 import "@/styles/globals.css";
 import Navbar from "@/components/navbar";
+import Footer from "@/components/Footer";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -23,6 +24,7 @@ export default async function RootLayout({
         <SessionProvider>
           <Navbar />
           {children}
+          <Footer />
         </SessionProvider>
       </body>
     </html>
