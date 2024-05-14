@@ -80,3 +80,11 @@ model TwoFactorConfirmation {
 
   @@unique([userId])
 }
+
+model Confguration {
+  id              String  @id @default(auto()) @map("_id") @db.ObjectId
+  width           Int
+  height          Int
+  imageUrl        String
+  croppedImageUrl String?
+}
