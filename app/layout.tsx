@@ -6,6 +6,7 @@ import "@/styles/globals.css";
 import { auth } from "@/auth";
 import Navbar from "@/components/navbar";
 import Footer from "@/components/footer";
+import { Toaster } from "@/components/ui/toaster"
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -31,6 +32,7 @@ export default async function RootLayout({
             <Footer />
           </main>
         </SessionProvider>
+        <Toaster />
       </body>
     </html>
   );
