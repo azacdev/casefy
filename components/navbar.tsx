@@ -79,7 +79,7 @@ const Navbar = () => {
                 </Link>
                 <div className="h-8 w-px bg-zinc-200 hidden sm:block" />
                 <Link
-                  href="/configure/upload"
+                  href="/case/upload"
                   className={buttonVariants({
                     size: "sm",
                     className: "hidden sm:flex items-center gap-1",

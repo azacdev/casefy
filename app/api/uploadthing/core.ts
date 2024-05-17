@@ -18,8 +18,6 @@ export const ourFileRouter = {
       const res = await fetch(file.url);
       const buffer = await res.arrayBuffer();
 
-      console.log("Buffer", buffer);
-
       const imgMetadata = await sharp(buffer).metadata();
 
       const { width, height } = imgMetadata;
