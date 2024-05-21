@@ -1,15 +1,14 @@
 import { notFound } from "next/navigation";
 
 import db from "@/lib/db";
-import DesignForm from "./_components/design-form";
-
-interface DesignPageProps {
+import DesignPreview from "./_components/design-preview";
+interface PreviewPagepProps {
   searchParams: {
     [key: string]: string | string[] | undefined;
   };
 }
 
-const DesignPage = async ({ searchParams }: DesignPageProps) => {
+const PreviewPage = async ({ searchParams }: PreviewPagepProps) => {
   const { id } = searchParams;
 
   if (!id || typeof id !== "string") {
@@ -24,15 +23,7 @@ const DesignPage = async ({ searchParams }: DesignPageProps) => {
     return notFound();
   }
 
-  const { imageUrl, width, height } = configuration;
-
-  return (
-    <DesignForm
-      configId={configuration.id}
-      imageUrl={imageUrl}
-      imageDimensions={{ width, height }}
-    />
-  );
+  return <DesignPreview configuration={configuration} />;
 };
 
-export default DesignPage;
+export default PreviewPage;

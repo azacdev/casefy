@@ -1,7 +1,6 @@
 import { cn } from "@/lib/utils";
 import Image from "next/image";
 import { HTMLAttributes } from "react";
-
 interface PhoneProps extends HTMLAttributes<HTMLDivElement> {
   imgSrc: string;
   dark?: boolean;
@@ -30,7 +29,7 @@ const Phone = ({ className, imgSrc, dark = false, ...props }: PhoneProps) => {
       <div className="absolute -z-10 inset-0">
         <Image
           src={imgSrc}
-          className="object-cover"
+          className="object-cover min-w-full min-h-full"
           alt="overlaying-phone-image"
           width={1000}
           height={1000}

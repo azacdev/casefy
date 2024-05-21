@@ -18,14 +18,12 @@ export const ourFileRouter = {
       const res = await fetch(file.url);
       const buffer = await res.arrayBuffer();
 
-      console.log("Buffer", buffer);
-
       const imgMetadata = await sharp(buffer).metadata();
 
       const { width, height } = imgMetadata;
 
       if (!configId) {
-        const configuration = await db.confguration.create({
+        const configuration = await db.configuration.create({
           data: {
             imageUrl: file.url,
             height: height || 500,
@@ -35,7 +33,7 @@ export const ourFileRouter = {
 
         return { configId: configuration.id };
       } else {
-        const updatedConfiguration = await db.confguration.update({
+        const updatedConfiguration = await db.configuration.update({
           where: {
             id: configId,
           },
