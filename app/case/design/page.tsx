@@ -1,7 +1,7 @@
 import { notFound } from "next/navigation";
 
 import db from "@/lib/db";
-import DesignForm from "./design-form";
+import DesignForm from "./_components/design-form";
 
 interface DesignPageProps {
   searchParams: {
@@ -16,7 +16,7 @@ const DesignPage = async ({ searchParams }: DesignPageProps) => {
     return notFound();
   }
 
-  const configuration = await db.confguration.findUnique({
+  const configuration = await db.configuration.findUnique({
     where: { id },
   });
 

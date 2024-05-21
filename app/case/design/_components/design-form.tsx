@@ -65,7 +65,7 @@ const DesignForm = ({
       });
     },
     onSuccess: () => {
-      router.push(`/configure/preview?id=${configId}`);
+      router.push(`/case/preview?id=${configId}`);
     },
   });
 

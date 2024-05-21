@@ -112,7 +112,7 @@ model TwoFactorConfirmation {
   @@unique([userId])
 }
 
-model Confguration {
+model Configuration {
   id              String        @id @default(auto()) @map("_id") @db.ObjectId
   width           Int
   height          Int
@@ -122,4 +122,11 @@ model Confguration {
   material        CaseMaterial?
   finish          CaseFinish?
   croppedImageUrl String?
+  Order           Order[]
+}
+
+model Order {
+  id              String        @id @default(auto()) @map("_id") @db.ObjectId
+  configurationId String        @db.ObjectId
+  configuration   Configuration @relation(fields: [configurationId], references: [id])
 }

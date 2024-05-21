@@ -1,4 +1,4 @@
-import { PRICES } from "@/config/products";
+import { PRODUCT_PRICES } from "@/config/products";
 
 export const COLORS = [
   { label: "Black", value: "black", tw: "zinc-900" },
@@ -43,13 +43,13 @@ export const MATERIALS = {
       label: "Silicone",
       value: "silicone",
       description: undefined,
-      price: PRICES.material.silicone,
+      price: PRODUCT_PRICES.material.silicone,
     },
     {
       label: "Soft Polycarbonate",
       value: "polycarbonate",
       description: "Scratch-resistant coating",
-      price: PRICES.material.polycarbonate,
+      price: PRODUCT_PRICES.material.polycarbonate,
     },
   ],
 } as const;
@@ -61,13 +61,13 @@ export const FINISHES = {
       label: "Smooth Finish",
       value: "smooth",
       description: undefined,
-      price: PRICES.finish.smooth,
+      price: PRODUCT_PRICES.finish.smooth,
     },
     {
       label: "Textured Finish",
       value: "textured",
       description: "Soft grippy texture",
-      price: PRICES.finish.textured,
+      price: PRODUCT_PRICES.finish.textured,
     },
   ],
 } as const;
