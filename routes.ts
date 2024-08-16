@@ -13,6 +13,8 @@ export const publicRoutes = [
   "/api/auth/providers",
   "/checkout",
   "/auth-callback",
+  /^\/product\/[^\/]+$/,
+  /^\/category\/[^\/]+$/,
 ];
 
 /**

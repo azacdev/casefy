@@ -1,43 +1,210 @@
+"use client";
+
 import Link from "next/link";
-import MaxWidthWrapper from "@/components/max-width-wrapper";
+import { usePathname } from "next/navigation";
+
+import { ModeToggle } from "@/components/mode-toggle";
+import { JoinNewsletterForm } from "@/components/forms/join-newsletter-form";
+import Container from "@/components/ui/container";
 
 const Footer = () => {
+  const pathname = usePathname();
+
   return (
-    <footer className="bg-white h-20 relative">
-      <MaxWidthWrapper>
-        <div className="border-t border-gray-200" />
+    <footer
+      className={`${
+        pathname.endsWith("/checkout") ? "hidden" : "block"
+      } w-full border-t bg-background`}
+    >
+      <Container>
+        <div className="py-6 px-4 sm:px-6 lg:px-8">
+          <section className="flex flex-col gap-10 lg:flex-row lg:gap-20">
+            <section
+              id="footer-branding"
+              aria-labelledby="footer-branding-heading"
+            >
+              <Link href="/" className="flex w-fit items-center space-x-2">
+                <span className="font-bold">Casiefy</span>
+                <span className="sr-only">Home</span>
+              </Link>
+            </section>
+            <section
+              id="footer-links"
+              className="grid flex-1 gap-10 grid-cols-2 sm:grid-cols-3"
+            >
+              <div className="space-y-3">
+                <h4 className="text-base font-medium">Social</h4>
+                <ul className="space-y-2.5">
+                  <li>
+                    <Link
+                      href="#"
+                      target="_blank"
+                      rel="noreferrer"
+                      className="text-sm text-muted-foreground transition-colors hover:text-foreground"
+                    >
+                      Twitter
+                      <span className="sr-only">twitter</span>
+                    </Link>
+                  </li>
+                  <li>
+                    <Link
+                      href="#"
+                      target="_blank"
+                      rel="noreferrer"
+                      className="text-sm text-muted-foreground transition-colors hover:text-foreground"
+                    >
+                      Instagram
+                      <span className="sr-only">instagram</span>
+                    </Link>
+                  </li>
+                  <li>
+                    <Link
+                      href="#"
+                      target="_blank"
+                      rel="noreferrer"
+                      className="text-sm text-muted-foreground transition-colors hover:text-foreground"
+                    >
+                      Facebook
+                      <span className="sr-only">facebook</span>
+                    </Link>
+                  </li>
+                  <li>
+                    <Link
+                      href="#"
+                      target="_blank"
+                      rel="noreferrer"
+                      className="text-sm text-muted-foreground transition-colors hover:text-foreground"
+                    >
+                      Tiktok
+                      <span className="sr-only">tiktok</span>
+                    </Link>
+                  </li>
+                </ul>
+              </div>
 
-        <div className="h-full flex flex-col md:flex-row md:justify-between justify-center items-center">
-          <div className="text-center md:text-left pb-2 md:pb-0">
-            <p className="text-sm text-muted-foreground">
-              &copy; {new Date().getFullYear()} All rights reserved
+              <div className="space-y-3">
+                <h4 className="text-base font-medium">Help</h4>
+                <ul className="space-y-2.5">
+                  <li>
+                    <Link
+                      href="#"
+                      target="_blank"
+                      rel="noreferrer"
+                      className="text-sm text-muted-foreground transition-colors hover:text-foreground"
+                    >
+                      About
+                      <span className="sr-only">about</span>
+                    </Link>
+                  </li>
+                  <li>
+                    <Link
+                      href="#"
+                      target="_blank"
+                      rel="noreferrer"
+                      className="text-sm text-muted-foreground transition-colors hover:text-foreground"
+                    >
+                      Contact
+                      <span className="sr-only">contact</span>
+                    </Link>
+                  </li>
+                  <li>
+                    <Link
+                      href="#"
+                      target="_blank"
+                      rel="noreferrer"
+                      className="text-sm text-muted-foreground transition-colors hover:text-foreground"
+                    >
+                      Terms
+                      <span className="sr-only">terms</span>
+                    </Link>
+                  </li>
+                  <li>
+                    <Link
+                      href="#"
+                      target="_blank"
+                      rel="noreferrer"
+                      className="text-sm text-muted-foreground transition-colors hover:text-foreground"
+                    >
+                      Privacy
+                      <span className="sr-only">privacy</span>
+                    </Link>
+                  </li>
+                </ul>
+              </div>
+
+              <div className="space-y-3">
+                <h4 className="text-base font-medium">Social</h4>
+                <ul className="space-y-2.5">
+                  <li>
+                    <Link
+                      href="#"
+                      target="_blank"
+                      rel="noreferrer"
+                      className="text-sm text-muted-foreground transition-colors hover:text-foreground"
+                    >
+                      Twitter
+                      <span className="sr-only">twitter</span>
+                    </Link>
+                  </li>
+                  <li>
+                    <Link
+                      href="#"
+                      target="_blank"
+                      rel="noreferrer"
+                      className="text-sm text-muted-foreground transition-colors hover:text-foreground"
+                    >
+                      Instagram
+                      <span className="sr-only">instagram</span>
+                    </Link>
+                  </li>
+                  <li>
+                    <Link
+                      href="#"
+                      target="_blank"
+                      rel="noreferrer"
+                      className="text-sm text-muted-foreground transition-colors hover:text-foreground"
+                    >
+                      Facebook
+                      <span className="sr-only">facebook</span>
+                    </Link>
+                  </li>
+                  <li>
+                    <Link
+                      href="#"
+                      target="_blank"
+                      rel="noreferrer"
+                      className="text-sm text-muted-foreground transition-colors hover:text-foreground"
+                    >
+                      Tiktok
+                      <span className="sr-only">tiktok</span>
+                    </Link>
+                  </li>
+                </ul>
+              </div>
+            </section>
+            <section
+              id="newsletter"
+              aria-labelledby="newsletter-heading"
+              className="space-y-3"
+            >
+              <h4 className="text-base font-medium">
+                Subscribe to our newsletter
+              </h4>
+              <JoinNewsletterForm />
+            </section>
+          </section>
+
+          <div className="flex justify-end">
+            <ModeToggle />
+          </div>
+
+          <section className="mx-auto py-10">
+            <p className="text-center">
+              &copy; {new Date().getFullYear()} Casiefy, All rights reserved
             </p>
-          </div>
-
-          <div className="flex items-center justify-center">
-            <div className="flex space-x-8">
-              <Link
-                href="#"
-                className="text-sm text-muted-foreground hover:text-gray-600"
-              >
-                Terms
-              </Link>
-              <Link
-                href="#"
-                className="text-sm text-muted-foreground hover:text-gray-600"
-              >
-                Privacy Policy
-              </Link>
-              <Link
-                href="#"
-                className="text-sm text-muted-foreground hover:text-gray-600"
-              >
-                Cookie Policy
-              </Link>
-            </div>
-          </div>
+          </section>
         </div>
-      </MaxWidthWrapper>
+      </Container>
     </footer>
   );
 };

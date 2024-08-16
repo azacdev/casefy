@@ -25,7 +25,7 @@ export const Social = ({ socialsLabel }: SocialProps) => {
     <div className="flex flex-col lg:flex-row items-center w-full gap-2 text-slate-900">
       <Button
         size={"lg"}
-        className="w-full font-semibold bg-[#16171C] border"
+        className="w-full font-semibold border"
         onClick={() => onClick()}
       >
         <FcGoogle className="h-5 w-5 mr-3" /> {socialsLabel} with Google

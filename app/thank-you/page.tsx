@@ -12,7 +12,6 @@ const ThankYouPage = async ({ searchParams }: ThankYouPageProps) => {
 
   const response = await fetch(
     `${process.env.NEXT_PUBLIC_APP_URL}/api/verify-transaction?reference=${reference}`
-    // `http://localhost:3000/api/verify-transaction?reference=${reference}`
   );
 
   const data = await response.json();
@@ -20,7 +19,7 @@ const ThankYouPage = async ({ searchParams }: ThankYouPageProps) => {
 
   return (
     <Suspense>
-      <ThankYou transaction={transaction}/>
+      <ThankYou transaction={transaction} />
     </Suspense>
   );
 };

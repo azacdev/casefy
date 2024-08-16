@@ -1,13 +1,14 @@
 import { Recursive } from "next/font/google";
 
 import "@/styles/globals.css";
-import Navbar from "@/components/navbar";
 import Footer from "@/components/footer";
 import Providers from "@/components/providers";
 import { Toaster } from "@/components/ui/toaster";
 import { SessionProvider } from "next-auth/react";
 import { auth } from "@/auth";
 import { contructMetedata } from "@/lib/utils";
+import ModalProvider from "@/providers/modal-provider";
+import { ThemeProvider } from "@/providers/theme-provider";
 
 const recursive = Recursive({ subsets: ["latin"] });
 
@@ -24,15 +25,18 @@ export default async function RootLayout({
     <SessionProvider session={session}>
       <html lang="en">
         <body className={recursive.className}>
-          <Navbar />
-          <main className="grainy-light flex flex-col min-h-[calc(100vh-3.5rem-1px)]">
-            <div className="flex-1 flex flex-col h-full">
+          <ThemeProvider
+            attribute="class"
+            defaultTheme="system"
+            enableSystem
+            disableTransitionOnChange
+          >
+            <ModalProvider />
+            <main className="">
               <Providers>{children}</Providers>
-            </div>
-            <Footer />
-          </main>
-
-          <Toaster />
+            </main>
+            <Toaster />
+          </ThemeProvider>
         </body>
       </html>
     </SessionProvider>
