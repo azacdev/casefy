@@ -1,42 +1,25 @@
-import { auth } from "@clerk/nextjs";
-import prismadb from "@lib/prismadb";
-
 import { NextResponse } from "next/server";
 
-export async function DELETE(
-  req: Request,
-  { params }: { params: { storeId: string } }
-) {
-  try {
-    const { userId } = auth();
+import getSession from "@/lib/get-session";
+import db from "@/lib/db";
 
-    if (!userId) {
+export async function DELETE(req: Request) {
+  try {
+    const session = await getSession();
+
+    if (!session?.user) {
       return new NextResponse("Unauthenticated", { status: 401 });
     }
 
-    if (!params.storeId) {
-      return new NextResponse("Store id is required", { status: 400 });
-    }
+    // Fix Later
 
-    // check if user is trying to modify someone elses store
-    const storeByUserId = await prismadb.store.findFirst({
-      where: {
-        id: params.storeId,
-        userId,
-      },
-    });
+    // const order = await db.orderItem.deleteMany({
+    //   where: {
+    //     id: params.storeId,
+    //   },
+    // });
 
-    if (!storeByUserId) {
-      return new NextResponse("Unauthorised", { status: 403 });
-    }
-
-    const order = await prismadb.orderItem.deleteMany({
-      where: {
-        id: params.storeId,
-      },
-    });
-
-    return NextResponse.json(order);
+    return NextResponse.json({ success: true });
   } catch (error) {
     console.log("[ORDERS_DELETE]", error);
     return new NextResponse("Internal error", { status: 500 });

@@ -1,6 +1,7 @@
-import { auth } from "@clerk/nextjs";
-import prismadb from "@lib/prismadb";
 import { NextResponse } from "next/server";
+
+import db from "@/lib/db";
+import getSession from "@/lib/get-session";
 
 export async function GET(
   req: Request,
@@ -11,13 +12,13 @@ export async function GET(
       return new NextResponse("CatergoryId id is required", { status: 400 });
     }
 
-    const catergory = await prismadb.catergory.findUnique({
+    const catergory = await db.catergory.findUnique({
       where: {
         id: params.categoryId,
       },
       include: {
-        billboard: true
-      }
+        billboard: true,
+      },
     });
 
     return NextResponse.json(catergory);
@@ -32,12 +33,12 @@ export async function PATCH(
   { params }: { params: { storeId: string; catergoryId: string } }
 ) {
   try {
-    const { userId } = auth();
+    const session = await getSession();
     const body = await req.json();
 
     const { name, billboardId } = body;
 
-    if (!userId) {
+    if (!session?.user) {
       return new NextResponse("Unauthenticated", { status: 401 });
     }
 
@@ -52,19 +53,8 @@ export async function PATCH(
     if (!params.catergoryId) {
       return new NextResponse("Catergory id is required", { status: 400 });
     }
-    // check if user is trying to modify someone elses store
-    const storeByUserId = await prismadb.store.findFirst({
-      where: {
-        id: params.storeId,
-        userId,
-      },
-    });
 
-    if (!storeByUserId) {
-      return new NextResponse("Unauthorised", { status: 403 });
-    }
-
-    const category = await prismadb.catergory.updateMany({
+    const category = await db.catergory.updateMany({
       where: {
         id: params.catergoryId,
       },
@@ -83,36 +73,25 @@ export async function PATCH(
 
 export async function DELETE(
   req: Request,
-  { params }: { params: { storeId: string; categoryId: string } }
+  { params }: { params: { categoryId: string } }
 ) {
   try {
-    const { userId } = auth();
+    const session = await getSession();
 
-    if (!userId) {
+    if (!session?.user) {
       return new NextResponse("Unauthenticated", { status: 401 });
     }
 
     if (!params.categoryId) {
       return new NextResponse("Category id is required", { status: 400 });
     }
-    // check if user is trying to modify someone elses store
-    const storeByUserId = await prismadb.store.findFirst({
-      where: {
-        id: params.storeId,
-        userId,
-      },
-    });
 
-    if (!storeByUserId) {
-      return new NextResponse("Unauthorised", { status: 403 });
-    }
-
-    const catergory = await prismadb.catergory.deleteMany({
+    const catergory = await db.catergory.deleteMany({
       where: {
         id: params.categoryId,
       },
     });
-    
+
     return NextResponse.json(catergory);
   } catch (error) {
     console.log("[CATEGORY_DELETE]", error);

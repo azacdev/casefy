@@ -1,18 +1,19 @@
-import { auth } from "@clerk/nextjs";
 import { NextResponse } from "next/server";
 
-import prismadb from "@lib/prismadb";
+import db from "@/lib/db";
+import getSession from "@/lib/get-session";
 
 export async function POST(
   req: Request,
   { params }: { params: { storeId: string } }
 ) {
   try {
-    const { userId } = auth();
+    const session = await getSession();
+
     const body = await req.json();
     const { name, billboardId } = body;
 
-    if (!userId) {
+    if (!session?.user) {
       return new NextResponse("Unauthenticated", { status: 401 });
     }
 
@@ -28,23 +29,10 @@ export async function POST(
       return new NextResponse("StoreId is required", { status: 400 });
     }
 
-    // check if user is trying to modify someone elses store
-    const storeByUserId = await prismadb.store.findFirst({
-      where: {
-        id: params.storeId,
-        userId,
-      },
-    });
-
-    if (!storeByUserId) {
-      return new NextResponse("Unauthorised", { status: 403 });
-    }
-
-    const category = await prismadb.catergory.create({
+    const category = await db.catergory.create({
       data: {
         name,
         billboardId,
-        storeId: params.storeId,
       },
     });
 
@@ -55,20 +43,9 @@ export async function POST(
   }
 }
 
-export async function GET(
-  req: Request,
-  { params }: { params: { storeId: string } }
-) {
+export async function GET(req: Request) {
   try {
-    if (!params.storeId) {
-      return new NextResponse("StoreId is required", { status: 400 });
-    }
-
-    const categories = await prismadb.catergory.findMany({
-      where: {
-        storeId: params.storeId,
-      },
-    });
+    const categories = await db.catergory.findMany({});
 
     return NextResponse.json(categories);
   } catch (error) {

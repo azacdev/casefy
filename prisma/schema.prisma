@@ -175,21 +175,15 @@ model BillingAddress {
 
 model Billboard {
   id         String      @id @default(auto()) @map("_id") @db.ObjectId
-  storeId    String
-  // store      Store       @relation("StoreToBillboard", fields: [storeId], references: [id])
   label      String
   imageUrl   String
   categories Catergory[]
   createdAt  DateTime    @default(now())
   updatedAt  DateTime    @updatedAt
-
-  @@index([storeId])
 }
 
 model Catergory {
   id          String    @id @default(auto()) @map("_id") @db.ObjectId
-  storeId     String
-  // store       Store     @relation("StoreToCategory", fields: [storeId], references: [id])
   billboardId String    @db.ObjectId
   billboard   Billboard @relation(fields: [billboardId], references: [id])
   products    Product[] @relation("CategoryToProduct")
@@ -197,40 +191,29 @@ model Catergory {
   createdAt   DateTime  @default(now())
   updatedAt   DateTime  @updatedAt
 
-  @@index([storeId])
   @@index([billboardId])
 }
 
 model Size {
   id        String    @id @default(auto()) @map("_id") @db.ObjectId
-  storeId   String
-  // store     Store     @relation("StoreToSize", fields: [storeId], references: [id])
   name      String
   value     String
   products  Product[]
   createdAt DateTime  @default(now())
   updatedAt DateTime  @updatedAt
-
-  @@index([storeId])
 }
 
 model Color {
   id        String    @id @default(auto()) @map("_id") @db.ObjectId
-  storeId   String
-  // store     Store     @relation("StoreToColor", fields: [storeId], references: [id])
   name      String
   value     String
   products  Product[]
   createdAt DateTime  @default(now())
   updatedAt DateTime  @updatedAt
-
-  @@index([storeId])
 }
 
 model Product {
   id          String    @id @default(auto()) @map("_id") @db.ObjectId
-  storeId     String
-  // store       Store       @relation("StoreToProduct", fields: [storeId], references: [id])
   categoryId  String    @db.ObjectId
   category    Catergory @relation("CategoryToProduct", fields: [categoryId], references: [id])
   name        String
@@ -245,11 +228,9 @@ model Product {
   colorId     String    @db.ObjectId
   color       Color     @relation(fields: [colorId], references: [id])
   images      Image[]
-  // orderItems  OrderItem[]
   createdAt   DateTime  @default(now())
   updatedAt   DateTime  @updatedAt
 
-  @@index([storeId])
   @@index([categoryId])
   @@index([sizeId])
   @@index([colorId])

@@ -1,7 +1,7 @@
-import { auth } from "@clerk/nextjs";
-import prismadb from "@lib/prismadb";
-
 import { NextResponse } from "next/server";
+
+import db from "@/lib/db";
+import getSession from "@/lib/get-session";
 
 export async function GET(
   req: Request,
@@ -12,7 +12,7 @@ export async function GET(
       return new NextResponse("Color id is required", { status: 400 });
     }
 
-    const color = await prismadb.color.findUnique({
+    const color = await db.color.findUnique({
       where: {
         id: params.colorId,
       },
@@ -30,12 +30,12 @@ export async function PATCH(
   { params }: { params: { storeId: string; colorId: string } }
 ) {
   try {
-    const { userId } = auth();
+    const session = await getSession();
     const body = await req.json();
 
     const { name, value } = body;
 
-    if (!userId) {
+    if (!session?.user) {
       return new NextResponse("Unauthenticated", { status: 401 });
     }
 
@@ -50,19 +50,8 @@ export async function PATCH(
     if (!params.colorId) {
       return new NextResponse("Color id is required", { status: 400 });
     }
-    // check if user is trying to modify someone elses store
-    const storeByUserId = await prismadb.store.findFirst({
-      where: {
-        id: params.storeId,
-        userId,
-      },
-    });
 
-    if (!storeByUserId) {
-      return new NextResponse("Unauthorised", { status: 403 });
-    }
-
-    const color = await prismadb.color.updateMany({
+    const color = await db.color.updateMany({
       where: {
         id: params.colorId,
       },
@@ -84,28 +73,17 @@ export async function DELETE(
   { params }: { params: { storeId: string; colorId: string } }
 ) {
   try {
-    const { userId } = auth();
+    const session = await getSession();
 
-    if (!userId) {
+    if (!session?.user) {
       return new NextResponse("Unauthenticated", { status: 401 });
     }
 
     if (!params.colorId) {
       return new NextResponse("Color id is required", { status: 400 });
     }
-    // check if user is trying to modify someone elses store
-    const storeByUserId = await prismadb.store.findFirst({
-      where: {
-        id: params.storeId,
-        userId,
-      },
-    });
 
-    if (!storeByUserId) {
-      return new NextResponse("Unauthorised", { status: 403 });
-    }
-
-    const color = await prismadb.color.deleteMany({
+    const color = await db.color.deleteMany({
       where: {
         id: params.colorId,
       },

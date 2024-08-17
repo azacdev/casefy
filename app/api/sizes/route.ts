@@ -1,18 +1,18 @@
-import { auth } from "@clerk/nextjs";
 import { NextResponse } from "next/server";
 
-import prismadb from "@lib/prismadb";
+import db from "@/lib/db";
+import getSession from "@/lib/get-session";
 
 export async function POST(
   req: Request,
   { params }: { params: { storeId: string } }
 ) {
   try {
-    const { userId } = auth();
+    const session = await getSession();
     const body = await req.json();
     const { name, value } = body;
 
-    if (!userId) {
+    if (!session?.user) {
       return new NextResponse("Unauthenticated", { status: 401 });
     }
 
@@ -27,23 +27,11 @@ export async function POST(
     if (!params.storeId) {
       return new NextResponse("StoreId is required", { status: 400 });
     }
-    // check if user is trying to modify someone elses store
-    const storeByUserId = await prismadb.store.findFirst({
-      where: {
-        id: params.storeId,
-        userId,
-      },
-    });
 
-    if (!storeByUserId) {
-      return new NextResponse("Unauthorised", { status: 403 });
-    }
-
-    const size = await prismadb.size.create({
+    const size = await db.size.create({
       data: {
         name: name,
         value: value,
-        storeId: params.storeId,
       },
     });
 
@@ -63,11 +51,7 @@ export async function GET(
       return new NextResponse("StoreId is required", { status: 400 });
     }
 
-    const sizes = await prismadb.size.findMany({
-      where: {
-        storeId: params.storeId,
-      },
-    });
+    const sizes = await db.size.findMany({});
 
     return NextResponse.json(sizes);
   } catch (error) {

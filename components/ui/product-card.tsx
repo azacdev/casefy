@@ -6,7 +6,7 @@ import Image from "next/image";
 import { EyeOpenIcon } from "@radix-ui/react-icons";
 
 import useCart from "@/hooks/use-cart";
-import { Products } from "@/types/types";
+import { Products } from "@/types";
 import usePreviewModal from "@/hooks/use-preview-modals";
 import { cn } from "@/lib/utils";
 
@@ -87,7 +87,7 @@ const ProductCard = ({ product, className, ...props }: ProductCardProps) => {
             title="Preview"
             onClick={onPreview}
           >
-            <EyeOpenIcon className="h-4 w-4 text-black" aria-hidden="true" />
+            <EyeOpenIcon className="h-4 w-4" aria-hidden="true" />
             <span className="sr-only">Preview</span>
           </Button>
         </div>

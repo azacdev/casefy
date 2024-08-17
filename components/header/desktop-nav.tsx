@@ -27,10 +27,7 @@ const DesktopNav = ({ categories }: DesktopNavProps) => {
         <Link
           href={route.href}
           key={route.href}
-          className={cn(
-            "text-sm font-medium transition-colors hover:text-black"
-            // route.active ? "text-black" : "text-neutral-500"
-          )}
+          className={cn("text-sm font-medium transition-colors")}
         >
           {route.label}
         </Link>

@@ -1,14 +1,11 @@
-import { auth } from "@clerk/nextjs";
 import { NextResponse } from "next/server";
 
-import prismadb from "@lib/prismadb";
+import db from "@/lib/db";
+import getSession from "@/lib/get-session";
 
-export async function POST(
-  req: Request,
-  { params }: { params: { storeId: string } }
-) {
+export async function POST(req: Request) {
   try {
-    const { userId } = auth();
+    const session = await getSession();
     const body = await req.json();
     const {
       name,
@@ -24,7 +21,7 @@ export async function POST(
       outOfStock,
     } = body;
 
-    if (!userId) {
+    if (!session?.user) {
       return new NextResponse("Unauthenticated", { status: 401 });
     }
 
@@ -44,25 +41,9 @@ export async function POST(
       });
     }
 
-    if (!params.storeId) {
-      return new NextResponse("StoreId is required", { status: 400 });
-    }
-
-    // check if user is trying to modify someone elses store
-    const storeByUserId = await prismadb.store.findFirst({
-      where: {
-        id: params.storeId,
-        userId,
-      },
-    });
-
-    if (!storeByUserId) {
-      return new NextResponse("Unauthorised", { status: 403 });
-    }
-
     const quantityAsNumber = parseInt(quantity, 10);
 
-    const product = await prismadb.product.create({
+    const product = await db.product.create({
       data: {
         name: name,
         price: price,
@@ -79,7 +60,6 @@ export async function POST(
         isArchived: isArchived,
         isFeatured: isFeatured,
         outOfStock: outOfStock,
-        storeId: params.storeId,
       },
     });
 
@@ -90,10 +70,7 @@ export async function POST(
   }
 }
 
-export async function GET(
-  req: Request,
-  { params }: { params: { storeId: string } }
-) {
+export async function GET(req: Request) {
   const { searchParams } = new URL(req.url);
   const categoryId = searchParams.get("categoryId") || undefined;
   const colorId = searchParams.get("colorId") || undefined;
@@ -101,13 +78,8 @@ export async function GET(
   const isFeatured = searchParams.get("isFeatured");
 
   try {
-    if (!params.storeId) {
-      return new NextResponse("StoreId is required", { status: 400 });
-    }
-
-    const products = await prismadb.product.findMany({
+    const products = await db.product.findMany({
       where: {
-        storeId: params.storeId,
         categoryId: categoryId,
         colorId: colorId,
         sizeId: sizeId,

@@ -1,5 +1,5 @@
-import { auth } from "@clerk/nextjs";
-import prismadb from "@lib/prismadb";
+import db from "@/lib/db";
+import getSession from "@/lib/get-session";
 
 import { NextResponse } from "next/server";
 
@@ -12,7 +12,7 @@ export async function GET(
       return new NextResponse("Product id is required", { status: 400 });
     }
 
-    const product = await prismadb.product.findUnique({
+    const product = await db.product.findUnique({
       where: {
         id: params.productId,
       },
@@ -36,7 +36,7 @@ export async function PATCH(
   { params }: { params: { storeId: string; productId: string } }
 ) {
   try {
-    const { userId } = auth();
+    const session = await getSession();
     const body = await req.json();
 
     const {
@@ -50,10 +50,10 @@ export async function PATCH(
       isArchived,
       quantity,
       description,
-      outOfStock
+      outOfStock,
     } = body;
 
-    if (!userId) {
+    if (!session?.user) {
       return new NextResponse("Unauthenticated", { status: 401 });
     }
 
@@ -76,21 +76,10 @@ export async function PATCH(
     if (!params.productId) {
       return new NextResponse("Product id is required", { status: 400 });
     }
-    // check if user is trying to modify someone elses store
-    const storeByUserId = await prismadb.store.findFirst({
-      where: {
-        id: params.storeId,
-        userId,
-      },
-    });
-
-    if (!storeByUserId) {
-      return new NextResponse("Unauthorised", { status: 403 });
-    }
 
     const quantityAsNumber = parseInt(quantity, 10);
 
-    await prismadb.product.update({
+    await db.product.update({
       where: {
         id: params.productId,
       },
@@ -108,11 +97,10 @@ export async function PATCH(
         isFeatured: isFeatured,
         isArchived: isArchived,
         outOfStock: outOfStock,
-        storeId: params.storeId,
       },
     });
 
-    const product = await prismadb.product.update({
+    const product = await db.product.update({
       where: {
         id: params.productId,
       },
@@ -137,28 +125,17 @@ export async function DELETE(
   { params }: { params: { storeId: string; productId: string } }
 ) {
   try {
-    const { userId } = auth();
+    const session = await getSession();
 
-    if (!userId) {
+    if (!!session?.user) {
       return new NextResponse("Unauthenticated", { status: 401 });
     }
 
     if (!params.productId) {
       return new NextResponse("Product id is required", { status: 400 });
     }
-    // check if user is trying to modify someone elses store
-    const storeByUserId = await prismadb.store.findFirst({
-      where: {
-        id: params.storeId,
-        userId,
-      },
-    });
 
-    if (!storeByUserId) {
-      return new NextResponse("Unauthorised", { status: 403 });
-    }
-
-    const product = await prismadb.product.deleteMany({
+    const product = await db.product.deleteMany({
       where: {
         id: params.productId,
       },

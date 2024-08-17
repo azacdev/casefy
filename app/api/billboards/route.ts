@@ -1,18 +1,16 @@
-import { auth } from "@clerk/nextjs";
 import { NextResponse } from "next/server";
 
-import prismadb from "@lib/prismadb";
+import db from "@/lib/db";
+import getSession from "@/lib/get-session";
 
-export async function POST(
-  req: Request,
-  { params }: { params: { storeId: string } }
-) {
+export async function POST(req: Request) {
   try {
-    const { userId } = auth();
+    const session = await getSession();
+
     const body = await req.json();
     const { label, imageUrl } = body;
 
-    if (!userId) {
+    if (!session?.user) {
       return new NextResponse("Unauthenticated", { status: 401 });
     }
 
@@ -20,30 +18,14 @@ export async function POST(
       return new NextResponse("Label is required", { status: 400 });
     }
 
-    if (!params.storeId) {
-      return new NextResponse("StoreId is required", { status: 400 });
-    }
-
     if (!imageUrl) {
       return new NextResponse("Image URL is required", { status: 400 });
     }
-    // check if user is trying to modify someone elses store
-    const storeByUserId = await prismadb.store.findFirst({
-      where: {
-        id: params.storeId,
-        userId,
-      },
-    });
 
-    if (!storeByUserId) {
-      return new NextResponse("Unauthorised", { status: 403 });
-    }
-
-    const billboard = await prismadb.billboard.create({
+    const billboard = await db.billboard.create({
       data: {
         label,
         imageUrl,
-        storeId: params.storeId,
       },
     });
 
@@ -54,20 +36,9 @@ export async function POST(
   }
 }
 
-export async function GET(
-  req: Request,
-  { params }: { params: { storeId: string } }
-) {
+export async function GET(req: Request) {
   try {
-    if (!params.storeId) {
-      return new NextResponse("StoreId is required", { status: 400 });
-    }
-
-    const billboards = await prismadb.billboard.findMany({
-      where: {
-        storeId: params.storeId,
-      },
-    });
+    const billboards = await db.billboard.findMany({});
 
     return NextResponse.json(billboards);
   } catch (error) {
